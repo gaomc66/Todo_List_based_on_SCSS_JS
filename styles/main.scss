@@ -14,9 +14,11 @@ body {
         margin-left: 50px;
     }
 }
+
 h3 {
     text-transform: uppercase;
 }
+
 .grid-header {
     grid-area: header;  
 
@@ -72,6 +74,5 @@ button {
     
 }
 button:hover {
-        color: greenyellow;
-    
+        color: rgb(143, 218, 31);
 }
