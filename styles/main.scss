@@ -18,10 +18,25 @@ body {
 .grid-container {
     display: grid;
     grid-template-columns: 
-    'header header header'
-    'main main button';
+    'header header header header'
+    'input input input submit';
     grid-gap: 10px;
+
 }
+
+.grid-header {
+    grid-area: header;
+}
+
+.grid-input {
+    grid-area: input;
+}
+
+.grid-submit {
+    grid-area: submit;
+}
+
+
 
 .add-p {
     > input {
