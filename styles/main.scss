@@ -10,9 +10,8 @@ body {
     border-radius: 20px;
     border: solid black;
     margin: auto;
-    > div {
-        margin-left: 50px;
-    }
+    padding: 10px 10px 50px 50px;
+
 }
 
 h3 {
@@ -72,7 +71,56 @@ button {
     outline: none;
     padding:25px;
     
-}
-button:hover {
+    &:hover {
         color: rgb(143, 218, 31);
+    }   
 }
+
+
+ul {
+
+    padding-left: 0px;
+    button {
+        font-size: 15px;
+    }
+    
+}
+
+li {
+
+    overflow: hidden;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+
+    * {
+        float: left;
+    }
+    input[type="checkbox"] {
+        margin: 0 10px;
+        position: relative;
+        top: 15px;
+    }
+
+    > label {
+        font-size: 18px;
+        line-height: 40px;
+        width: 180px;
+        padding: 0 0 0 11px;
+    }
+
+    > button {
+        height: 40px;
+        margin: inherit;
+        padding: unset;
+        
+        &:hover {
+            color: rgb(39, 111, 160);
+
+        }
+    }
+}
+
+li, h3 {
+    clear:both;
+    list-style:none;
+  }
