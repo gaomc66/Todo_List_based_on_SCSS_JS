@@ -1,0 +1,17 @@
+[
+    {
+        "title" : "first-todo",
+        "description" : "test for first todo item",
+        "data" : "2020-06-06",
+        "time" : "12:12",
+        "status" : true
+    },
+
+    {
+        "title" : "complete-todo",
+        "description" : "test for complete todo item",
+        "data" : "2020-06-09",
+        "time" : "12:13",
+        "status" : false
+    }
+]
