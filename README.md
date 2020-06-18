@@ -7,3 +7,11 @@
 * As a user, I should be able to open add a new to-do item view by clicking the add button and this need not be persisted.
 * As a user, I should be able to add a to-do item by entering the title, description, due date, and time.
 * As a user, I should be able to mark a to-do item as complete.
+
+
+```shell
+> npm install http-server
+> ./node_modules/.bin/http-server -a localhost -p 8000 -c-1
+----- or ------
+> npm start // (modified in package.json)
+```
