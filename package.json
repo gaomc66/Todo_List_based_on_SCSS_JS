@@ -1,0 +1,14 @@
+{
+  "name": "assignment6",
+  "version": "1.0.0",
+  "description": "## TO DO LIST",
+  "main": "index.js",
+  "scripts": {
+    "scss": "./node_modules/.bin/node-sass styles/main.scss --output dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-sass": "^4.14.1"
+  }
+}

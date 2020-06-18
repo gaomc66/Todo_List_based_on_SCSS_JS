@@ -1,0 +1,33 @@
+body {
+    background: #fff;
+    color: #333;
+    font-family: Lato, sans-serif;
+}
+
+.main-container {
+    display: block;
+    width: 400px;
+    border-radius: 20px;
+    border: solid black;
+    margin: auto;
+    > div {
+        margin-left: 50px;
+    }
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 
+    'header header header'
+    'main main button';
+    grid-gap: 10px;
+}
+
+.add-p {
+    > input {
+        margin-top: 5px;
+    }
+    > scan {
+        margin-top: 5px;
+    }
+}
