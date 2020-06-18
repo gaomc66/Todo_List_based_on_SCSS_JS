@@ -39,7 +39,6 @@ h3 {
 
 .grid-header {
     grid-area: header;  
-
 }
 
 .grid-input {
@@ -93,6 +92,15 @@ button {
     &:hover {
         color: rgb(143, 218, 31);
     }   
+}
+
+.add-new-button-main {
+    width: max-content;
+    font-size: 25px;
+    padding: 0px;
+    &:hover {
+        color: rgb(143, 218, 31);
+    }
 }
 
 
