@@ -14,35 +14,64 @@ body {
         margin-left: 50px;
     }
 }
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 
-    'header header header header'
-    'input input input submit';
-    grid-gap: 10px;
-
+h3 {
+    text-transform: uppercase;
 }
-
 .grid-header {
-    grid-area: header;
+    grid-area: header;  
+
 }
 
 .grid-input {
-    grid-area: input;
+    grid-area: main;
+    // border-right: solid black;
+
 }
 
 .grid-submit {
     grid-area: submit;
 }
 
+.grid-reset {
+    grid-area: reset
+}
 
+.grid-container {
+    display: grid;
+    grid-template-areas: 
+    'header header header header header header'
+    'main main main submit submit submit'
+    'main main main reset reset reset';
+
+}
 
 .add-p {
+    margin: 0px;
+    color: #888;
+
     > input {
         margin-top: 5px;
+        margin-bottom: 5px;
     }
     > scan {
-        margin-top: 5px;
+        font-size: 15px;
     }
+}
+
+button {
+    background: none;
+    border: 0px;
+    color: #888;
+    font-size: 20px;
+    width: 60px;
+    margin: 10px 0 0;
+    font-family: Lato, sans-serif;
+    cursor: pointer;
+    outline: none;
+    padding:25px;
+    
+}
+button:hover {
+        color: greenyellow;
+    
 }
