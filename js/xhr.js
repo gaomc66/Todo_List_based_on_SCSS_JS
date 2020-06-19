@@ -131,12 +131,15 @@ let bandEventInTodoList = function (theTodoItemElement) {
 
     let checkbox = theTodoItemElement.querySelector("input[type=checkbox]");
     let viewBtn = theTodoItemElement.querySelector("button.view");
-    // let deleteBtn = theTodoItem.querySelector("button.delete");
+    let deleteBtn = theTodoItemElement.querySelector("button.delete");
     let title = theTodoItemElement.querySelector("label").innerText;
 
     console.log(viewBtn);
 
-    // deleteBtn.onclick=detouchTodoItem();
+    deleteBtn.addEventListener("click", () => {
+        window.localStorage.removeItem(title);
+        location.reload();
+    });
 
     // add event listener on checkbox change, and make change on item in localstorage
     checkbox.addEventListener("change", (event) => {
@@ -192,7 +195,8 @@ let addNewTodoItem = function () {
         "title" : document.getElementById("title-input").value,
         "description" : document.getElementById("description-input").value,
         "date" : document.getElementById("date-input").value,
-        "time" : document.getElementById("time-input").value
+        "time" : document.getElementById("time-input").value,
+        "status" : false 
     }
 
     console.log("new todo item added: " + todoItem);
@@ -225,10 +229,10 @@ let appendTodoItem = function(theTodoItem, parent){
  * @param {*} theTodoItem 
  * @param {*} parent 
  */
-// let detouchTodoItem = function(theTodoItem, parent){
-//     parent.removeChild(theTodoItem);
-//     parent.removeChild(document.getElementById("detail-view-div" + theTodoItem.title));
-// }
+let detouchTodoItem = function(theTodoItem, parent){
+    parent.removeChild(theTodoItem);
+    parent.removeChild(document.getElementById("detail-view-div" + theTodoItem.title));
+}
 
 /**
  * dynamically generate new todo item
@@ -257,14 +261,14 @@ let createNewTodoItem = function(theTodoItem){
     viewButton.className = "view";
 
     // create <button> delete </button>
-    // let deleteButton = document.createElement("button");
-    // deleteButton.innerText="Delete";
-    // deleteButton.className="delete";
+    let deleteButton = document.createElement("button");
+    deleteButton.innerText="Delete";
+    deleteButton.className="delete";
     
     listElement.appendChild(checkBox);
 	listElement.appendChild(label);
 	listElement.appendChild(viewButton);
-    // listElement.appendChild(deleteButton);
+    listElement.appendChild(deleteButton);
     
     return listElement;
 }
@@ -279,34 +283,93 @@ let createDetailView = function (todoItem) {
     let detailViewDiv = document.createElement("div");
     detailViewDiv.id = "detail-view-div" + todoItem.title;
     
-    let titleP = document.createElement("p");
+    // let titleP = document.createElement("p");
 
-    titleP.innerText = 'Title: ' + todoItem.title;
+    // titleP.innerText = 'Title: ' + todoItem.title;
 
     // let titleLabel = document.createElement("label");
     // titleLabel.innerText = todoItem.title;
 
-    let descriP = document.createElement("p");
-    descriP.innerText = "Description: " + todoItem.description;
+    let table = document.createElement("table");
+    table.className = "table";
 
-    let dateP = document.createElement("p");
-    dateP.innerText = "Date: " + todoItem.date;
+    let titleTr = document.createElement("tr");
+    let titleTd = document.createElement("td");
+    titleTd.innerText = "Title:";
+    let titleValue = document.createElement("td");
+    titleValue.innerText = todoItem.title;
 
-    let timeP = document.createElement("p");
-    timeP.innerText = "Time: " + todoItem.time;
+    titleTr.appendChild(titleTd);
+    titleTr.appendChild(titleValue);
 
-    let statusP = document.createElement("p");
+    let descriTr = document.createElement("tr");
+    let descriTd = document.createElement("td");
+    descriTd.innerText = "Description:";
+    let descriValue = document.createElement("td");
+    descriValue.innerText = todoItem.description;
+
+    descriTr.appendChild(descriTd);
+    descriTr.appendChild(descriValue);
+
+    let dateTr = document.createElement("tr");
+    let dateTd = document.createElement("td");
+    dateTd.innerText = "Date:";
+    let dateValue = document.createElement("td");
+    dateValue.innerText = todoItem.date;
+
+    dateTr.appendChild(dateTd);
+    dateTr.appendChild(dateValue);
+
+    let timeTr = document.createElement("tr");
+    let timeTd = document.createElement("td");
+    timeTd.innerText = "Time:";
+    let timeValue = document.createElement("td");
+    timeValue.innerText = todoItem.time;
+
+    timeTr.appendChild(timeTd);
+    timeTr.appendChild(timeValue);
+
+
+    let statusTr = document.createElement("tr");
+    let statusTd = document.createElement("td");
+    statusTd.innerText="Status: ";
+    let statusValue = document.createElement("td");
     if(todoItem.status) {
-        statusP.innerText = "Status: Completed!";
+        statusValue.innerText = "Completed!";
     }else{
-        statusP.innerText = "Status: UnCompleted!";
+        statusValue.innerText = "UnCompleted!";
     }
+    statusTr.appendChild(statusTd);
+    statusTr.appendChild(statusValue);
 
-    detailViewDiv.appendChild(titleP);
-    detailViewDiv.appendChild(descriP);
-    detailViewDiv.appendChild(dateP);
-    detailViewDiv.appendChild(timeP);
-    detailViewDiv.appendChild(statusP);
+
+    // let descriP = document.createElement("p");
+    // descriP.innerText = "Description: " + todoItem.description;
+
+    // let dateP = document.createElement("p");
+    // dateP.innerText = "Date: " + todoItem.date;
+
+    // let timeP = document.createElement("p");
+    // timeP.innerText = "Time: " + todoItem.time;
+
+    // let statusP = document.createElement("p");
+    // if(todoItem.status) {
+    //     statusP.innerText = "Status: Completed!";
+    // }else{
+    //     statusP.innerText = "Status: UnCompleted!";
+    // // }
+    table.appendChild(titleTr);
+    table.appendChild(descriTr);
+    table.appendChild(dateTr);
+    table.appendChild(timeTr);
+    table.appendChild(statusTr);
+
+    
+    detailViewDiv.appendChild(table);
+    // detailViewDiv.appendChild(descriP);
+    // detailViewDiv.appendChild(dateP);
+    // detailViewDiv.appendChild(timeP);
+    // detailViewDiv.appendChild(statusP);
 
     // hide detail view when generate 
     detailViewDiv.style.display = "none";
