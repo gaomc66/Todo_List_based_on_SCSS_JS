@@ -1,14 +1,16 @@
 let xhr = new XMLHttpRequest();
 
 const url = "./data/data.json";
+let firstMark = true;
 
 xhr.open('GET',url);
 
 xhr.onload = (evt) => {
     if(evt.target.status === 200){
         // parse todoItems from JSON file
-        let todoItems = JSON.parse(evt.target.responseText);
-        initTodoItems(todoItems);
+        init();
+        storeTodoItems(evt);        
+        initTodoItems();
         bandAllEvent();
     }
     console.log(evt.status);
@@ -16,8 +18,55 @@ xhr.onload = (evt) => {
 
 xhr.send();
 
+let init = function (){
+    document.getElementById("add-new").style.display = "none";
+    document.getElementById("add-btn").onclick=addNewTodoItem;
+
+}
+
+let storeTodoItems = function (evt) {
+    
+    if(Object.keys(localStorage).length < 1){
+        let todoItems = JSON.parse(evt.target.responseText);
+
+        console.log(todoItems);
+        todoItems.forEach(theTodoItem => {
+            window.localStorage.setItem(theTodoItem.title, JSON.stringify(theTodoItem));
+        });
+    }
+    
+}
+
+let initTodoItems = function(){
+
+    let todoItemHolder = document.getElementById('todo-list');
+    let completeItemHolder = document.getElementById('complete-list');
+
+    let todoItems = [],
+        keys = Object.keys(localStorage),
+        i = keys.length;
+
+        console.log("keys: " + keys);
+
+    while( i-- ){
+        let todoItem = JSON.parse(window.localStorage.getItem(keys[i]));
+        todoItems.push(todoItem);
+    }
+
+    todoItems.forEach(theTodoItem => {
+        console.log(theTodoItem);
+        if(theTodoItem.status){
+            appendTodoItem(theTodoItem,completeItemHolder);
+        }else {
+            appendTodoItem(theTodoItem,todoItemHolder);
+        }
+        console.log("stored into local storage");
+    });
+}
 
 let bandAllEvent = function (){
+
+    bandAddNewBtn();
 
     let todoItemHolder = document.getElementById('todo-list');
     let completeItemHolder = document.getElementById('complete-list');
@@ -26,27 +75,64 @@ let bandAllEvent = function (){
     for(let i = 0; i < todoItemHolder.children.length; i ++){
         console.log(i);
         if(todoItemHolder.children[i].matches("li")){
-            bandEvent(todoItemHolder.children[i]);
+            bandEventInTodoList(todoItemHolder.children[i]);
         }
     }
+
+    for(let i = 0; i < completeItemHolder.children.length; i ++){
+        console.log(i);
+        if(completeItemHolder.children[i].matches("li")){
+            bandEventInTodoList(completeItemHolder.children[i]);
+        }
+    }
+
 }
 
-let bandEvent = function (theTodoItem) {
-    console.log ("bind event to the buttons in to do div");
-    console.log(theTodoItem);
+let bandAddNewBtn = function () {
+    let addNewBtn = document.getElementById("add-new-btn");
+    console.log("---" + addNewBtn);
+    addNewBtn.addEventListener("click", function (event) {
+        let addNewDiv = document.getElementById("add-new");
+        // toggle Hide and Show 
+        if(addNewDiv.style.display === "none"){
+            addNewDiv.style.display = "grid";
+        }else {
+            addNewDiv.style.display = "none";
+        }
+    });
 
-    let checkbox = theTodoItem.querySelector("input[type=checkbox]");
-    let viewBtn = theTodoItem.querySelector("button.view");
-    let deleteBtn = theTodoItem.querySelector("button.delete");
-    let title = theTodoItem.querySelector("label").innerText;
+}
+
+let bandEventInTodoList = function (theTodoItemElement) {
+    console.log ("bind event to the buttons in to do div");
+    console.log(theTodoItemElement);
+
+    let checkbox = theTodoItemElement.querySelector("input[type=checkbox]");
+    let checked = checkbox.checked;
+    let viewBtn = theTodoItemElement.querySelector("button.view");
+    // let deleteBtn = theTodoItem.querySelector("button.delete");
+    let title = theTodoItemElement.querySelector("label").innerText;
 
     console.log(viewBtn);
 
-    deleteBtn.onclick=deleteTodoItem("test");
+    // deleteBtn.onclick=detouchTodoItem();
+
+    checkbox.addEventListener("change", (event) => {
+        let theTodoItem = JSON.parse(window.localStorage.getItem(title));
+        window.localStorage.removeItem(title);
+        if(theTodoItem.status){
+            theTodoItem.status = false;
+        }else {
+            theTodoItem.status = true;
+        }
+        console.log(theTodoItem);
+        window.localStorage.setItem(title, JSON.stringify(theTodoItem));
+
+        location.reload();
+    });
 
     viewBtn.addEventListener("click", function (event){
 
-        let todoItemTitle = theTodoItem.querySelector("label").innerText;
         console.log("showDetails");
         let divId = "detail-view-div" + title;
         console.log(divId);
@@ -72,34 +158,40 @@ let getTodoItemByTitle = function (title) {
 
 
 
-let deleteTodoItem = function (test){
-    console.log(test);
+let addNewTodoItem = function () {
+    console.log("addNewTodoItem");
+
+    let todoItem = {
+        "title" : document.getElementById("title-input").value,
+        "description" : document.getElementById("description-input").value,
+        "date" : document.getElementById("date-input").value,
+        "time" : document.getElementById("time-input").value
+    }
+
+    console.log("new todo item added: " + todoItem);
+
+    console.log("Add new todo item to local storage.");
+
+    window.localStorage.setItem(todoItem.title,  JSON.stringify(todoItem));
+
+    console.log("append new todo item to todo list");
+
+    appendTodoItem(todoItem,document.getElementById('todo-list'));
+
 }
 
 // let createDetailView = function (to)
 
-let initTodoItems = function(todoItems){
 
-    let todoItemHolder = document.getElementById('todo-list');
-    let completeItemHolder = document.getElementById('complete-list');
 
-    todoItems.forEach(theTodoItem => {
-        console.log(theTodoItem);
-        if(theTodoItem.status){
-            addTodoItem(theTodoItem,todoItemHolder);
-        }else {
-            addTodoItem(theTodoItem,completeItemHolder);
-        }
-        window.localStorage.setItem(theTodoItem.title,  JSON.stringify(theTodoItem));
-        console.log("stored into local storage");
-    });
-
-}
-
-let addTodoItem = function(theTodoItem, parent){
+let appendTodoItem = function(theTodoItem, parent){
     parent.appendChild(createNewTodoItem(theTodoItem));
     parent.appendChild(createDetailView(theTodoItem));
+}
 
+let detouchTodoItem = function(theTodoItem, parent){
+    parent.removeChild(theTodoItem);
+    parent.removeChild(document.getElementById("detail-view-div" + theTodoItem.title));
 }
 
 let createNewTodoItem = function(theTodoItem){
@@ -111,6 +203,10 @@ let createNewTodoItem = function(theTodoItem){
     let checkBox = document.createElement("input");
     checkBox.type = "checkbox";
 
+    if(theTodoItem.status){
+        checkBox.checked = true;
+    }
+
     // create <label>
     let label = document.createElement("label");
     label.innerText = theTodoItem.title;
@@ -121,14 +217,14 @@ let createNewTodoItem = function(theTodoItem){
     viewButton.className = "view";
 
     // create <button> delete </button>
-    let deleteButton = document.createElement("button");
-    deleteButton.innerText="Delete";
-    deleteButton.className="delete";
+    // let deleteButton = document.createElement("button");
+    // deleteButton.innerText="Delete";
+    // deleteButton.className="delete";
     
     listElement.appendChild(checkBox);
 	listElement.appendChild(label);
 	listElement.appendChild(viewButton);
-    listElement.appendChild(deleteButton);
+    // listElement.appendChild(deleteButton);
     
     return listElement;
 }
@@ -156,7 +252,11 @@ let createDetailView = function (todoItem) {
     timeP.innerText = "Time: " + todoItem.time;
 
     let statusP = document.createElement("p");
-    statusP.innerText = "Status: " + todoItem.status;
+    if(todoItem.status) {
+        statusP.innerText = "Status: Completed!";
+    }else{
+        statusP.innerText = "Status: UnCompleted!";
+    }
 
     detailViewDiv.appendChild(titleP);
     detailViewDiv.appendChild(descriP);
@@ -168,7 +268,4 @@ let createDetailView = function (todoItem) {
     detailViewDiv.style.display = "none";
 
     return detailViewDiv;
-
-
-
 }

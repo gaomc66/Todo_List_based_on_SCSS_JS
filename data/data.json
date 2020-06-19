@@ -4,35 +4,15 @@
         "description" : "test for first todo item",
         "date" : "2020-06-06",
         "time" : "12:12",
-        "status" : true
+        "status" : false
     },
-    {
-        "title" : "todo2",
-        "description" : "test for first todo item",
-        "date" : "2020-06-06",
-        "time" : "12:12",
-        "status" : true
-    },
-    {
-        "title" : "todo3",
-        "description" : "test for first todo item",
-        "date" : "2020-06-06",
-        "time" : "12:12",
-        "status" : true
-    },
-    {
-        "title" : "todo4",
-        "description" : "test for first todo item",
-        "date" : "2020-06-06",
-        "time" : "12:12",
-        "status" : true
-    },
+    
 
     {
-        "title" : "complete-todo",
+        "title" : "todo2",
         "description" : "test for complete todo item",
         "data" : "2020-06-09",
         "time" : "12:13",
-        "status" : false
+        "status" : true
     }
 ]

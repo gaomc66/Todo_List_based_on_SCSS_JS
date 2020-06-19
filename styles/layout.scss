@@ -37,34 +37,8 @@ h3 {
     text-transform: uppercase;
 }
 
-.grid-header {
-    grid-area: header;  
-}
 
-.grid-input {
-    grid-area: main;
-    // border-right: solid black;
-
-}
-
-.grid-submit {
-    grid-area: submit;
-}
-
-.grid-reset {
-    grid-area: reset
-}
-
-.grid-container {
-    display: grid;
-    grid-template-areas: 
-    'header header header header header header'
-    'main main main submit submit submit'
-    'main main main reset reset reset';
-
-}
-
-.add-p {
+.form {
     margin: 0px;
     color: #888;
 
@@ -150,4 +124,11 @@ li {
 li, h3 {
     clear:both;
     list-style:none;
+  }
+
+
+  /* Completed */
+#complete-list label {
+    text-decoration: line-through;
+    color: #888;
   }
