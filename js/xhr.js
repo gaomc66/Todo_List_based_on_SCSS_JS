@@ -7,10 +7,13 @@ xhr.open('GET',url);
 
 xhr.onload = (evt) => {
     if(evt.target.status === 200){
-        // parse todoItems from JSON file
+        // init basic divs
         init();
-        storeTodoItems(evt);        
+        // store data fr JSON file to local storage initially 
+        storeTodoItems(evt);    
+        // init todo items to todo-list and completed-list    
         initTodoItems();
+        // bind all btn Events
         bandAllEvent();
     }
     console.log(evt.status);
@@ -18,14 +21,20 @@ xhr.onload = (evt) => {
 
 xhr.send();
 
+/**
+ * init add new to-do item and hide it
+ */
 let init = function (){
     document.getElementById("add-new").style.display = "none";
     document.getElementById("add-btn").onclick=addNewTodoItem;
-
 }
 
+/**
+ * initially store data fr JSON file to local storage
+ * @param {*} evt 
+ */
 let storeTodoItems = function (evt) {
-    
+    // make sure just store one time
     if(Object.keys(localStorage).length < 1){
         let todoItems = JSON.parse(evt.target.responseText);
 
@@ -34,11 +43,12 @@ let storeTodoItems = function (evt) {
             window.localStorage.setItem(theTodoItem.title, JSON.stringify(theTodoItem));
         });
     }
-    
 }
 
+/**
+ * display to-do items to to-do list and complete list
+ */
 let initTodoItems = function(){
-
     let todoItemHolder = document.getElementById('todo-list');
     let completeItemHolder = document.getElementById('complete-list');
 
@@ -49,7 +59,7 @@ let initTodoItems = function(){
         console.log("keys: " + keys);
 
     while( i-- ){
-        let todoItem = JSON.parse(window.localStorage.getItem(keys[i]));
+        let todoItem = getTodoItemByTitle(keys[i]);
         todoItems.push(todoItem);
     }
 
@@ -64,21 +74,22 @@ let initTodoItems = function(){
     });
 }
 
+/**
+ * bind events to all btns
+ */
 let bandAllEvent = function (){
-
-    bandAddNewBtn();
 
     let todoItemHolder = document.getElementById('todo-list');
     let completeItemHolder = document.getElementById('complete-list');
 
-    console.log(todoItemHolder);
+    // bind event to btns in todo Item Holder
     for(let i = 0; i < todoItemHolder.children.length; i ++){
         console.log(i);
         if(todoItemHolder.children[i].matches("li")){
             bandEventInTodoList(todoItemHolder.children[i]);
         }
     }
-
+    // bind event to btns in completed Item Holder
     for(let i = 0; i < completeItemHolder.children.length; i ++){
         console.log(i);
         if(completeItemHolder.children[i].matches("li")){
@@ -86,11 +97,18 @@ let bandAllEvent = function (){
         }
     }
 
+    // bind event to add new todo btn
+    bandAddNewBtn();
+
 }
 
+/**
+ * bind event to add new todo btn
+ */
 let bandAddNewBtn = function () {
     let addNewBtn = document.getElementById("add-new-btn");
     console.log("---" + addNewBtn);
+    // show & hide add new div
     addNewBtn.addEventListener("click", function (event) {
         let addNewDiv = document.getElementById("add-new");
         // toggle Hide and Show 
@@ -103,12 +121,15 @@ let bandAddNewBtn = function () {
 
 }
 
+/**
+ * band event listener to checkbox and view button
+ * @param {*} theTodoItemElement 
+ */
 let bandEventInTodoList = function (theTodoItemElement) {
     console.log ("bind event to the buttons in to do div");
     console.log(theTodoItemElement);
 
     let checkbox = theTodoItemElement.querySelector("input[type=checkbox]");
-    let checked = checkbox.checked;
     let viewBtn = theTodoItemElement.querySelector("button.view");
     // let deleteBtn = theTodoItem.querySelector("button.delete");
     let title = theTodoItemElement.querySelector("label").innerText;
@@ -117,8 +138,9 @@ let bandEventInTodoList = function (theTodoItemElement) {
 
     // deleteBtn.onclick=detouchTodoItem();
 
+    // add event listener on checkbox change, and make change on item in localstorage
     checkbox.addEventListener("change", (event) => {
-        let theTodoItem = JSON.parse(window.localStorage.getItem(title));
+        let theTodoItem = getTodoItemByTitle(title);
         window.localStorage.removeItem(title);
         if(theTodoItem.status){
             theTodoItem.status = false;
@@ -131,6 +153,7 @@ let bandEventInTodoList = function (theTodoItemElement) {
         location.reload();
     });
 
+    // add event listener on viewBtn click, and show detail views for the sepcific item
     viewBtn.addEventListener("click", function (event){
 
         console.log("showDetails");
@@ -151,13 +174,17 @@ let bandEventInTodoList = function (theTodoItemElement) {
     });
 }
 
+/**
+ * get todo item object
+ * @param {*} title 
+ */
 let getTodoItemByTitle = function (title) {
-    let todoItem = localStorage.getItem(title);
-    console.log(todoItem);
+    return JSON.parse(window.localStorage.getItem(title));
 }
 
-
-
+/**
+ * generate new todo item object and added to local storage, and call appendTodoItem function
+ */
 let addNewTodoItem = function () {
     console.log("addNewTodoItem");
 
@@ -183,17 +210,30 @@ let addNewTodoItem = function () {
 // let createDetailView = function (to)
 
 
-
+/**
+ * append todoItem and it's detailview (hiding) to todo-item list holder
+ * @param {*} theTodoItem 
+ * @param {*} parent 
+ */
 let appendTodoItem = function(theTodoItem, parent){
     parent.appendChild(createNewTodoItem(theTodoItem));
     parent.appendChild(createDetailView(theTodoItem));
 }
 
-let detouchTodoItem = function(theTodoItem, parent){
-    parent.removeChild(theTodoItem);
-    parent.removeChild(document.getElementById("detail-view-div" + theTodoItem.title));
-}
+/**
+ * remove appended child
+ * @param {*} theTodoItem 
+ * @param {*} parent 
+ */
+// let detouchTodoItem = function(theTodoItem, parent){
+//     parent.removeChild(theTodoItem);
+//     parent.removeChild(document.getElementById("detail-view-div" + theTodoItem.title));
+// }
 
+/**
+ * dynamically generate new todo item
+ * @param {*} theTodoItem 
+ */
 let createNewTodoItem = function(theTodoItem){
 
     // create <li>
@@ -229,6 +269,10 @@ let createNewTodoItem = function(theTodoItem){
     return listElement;
 }
 
+/**
+ * dynamically generate new to-do item details view
+ * @param {*} todoItem 
+ */
 let createDetailView = function (todoItem) {
 
 
