@@ -32,7 +32,6 @@ h3 {
 
             &:hover {
                 color: rgb(143, 218, 31);
-
             }
         }
     }
@@ -46,15 +45,21 @@ h3 {
 }
 
 table {
-    width: 90%;
-    margin-left: 40px;
+    width: 75%;
+    margin-left:30px;
+    padding-left:20px;
+    margin-right:40px;
+    border-left: black dotted 2px;
     > tr {
         height : 30px;
         td:first-child {
+            width: 40%;
             font-weight: bold;
+
         }
         &:hover {
-            background-color: rgb(179, 209, 134);
+            background-color: rgb(0, 0, 0);
+            color: white;
         }
     }
     
@@ -124,8 +129,7 @@ li {
         padding: unset;
         
         &:hover {
-            color: rgb(39, 111, 160);
-
+            color: rgb(143, 218, 31);
         }
     }
 }
