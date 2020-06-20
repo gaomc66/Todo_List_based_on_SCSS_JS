@@ -1,17 +1,26 @@
 # Assignment 6
 
-## TO DO LIST
+## Project Description: TO DO LIST
 
-* As a user, I should be able to see all to-do items fetched using an XHR call from a JSON file.
-* As a user, I should be able to click a to-do item and able to see its detailed view.
-* As a user, I should be able to open add a new to-do item view by clicking the add button and this need not be persisted.
-* As a user, I should be able to add a to-do item by entering the title, description, due date, and time.
-* As a user, I should be able to mark a to-do item as complete.
+* Load To-do items fr JSON file
+* View Detais
+* Delete To-do items
+* Add new To-do items
+* Data stored in LocalStorage
+![To-do list Screenshot](./resources/todo.png?raw=true "To-do List")
 
-
+## instructions of run project
 ```shell
+// set up scss
+> npm init
+> npm install node-sass --save
+> ./node_modules/.bin/node-sass scss/main.scss --output dist/main.css
+// set up an alias for this command in package.json
+
+// set up http-server
 > npm install http-server
 > ./node_modules/.bin/http-server -a localhost -p 8000 -c-1
 ----- or ------
-> npm start // (modified in package.json)
+> npm start // (modified alias in package.json)
+// project then running at localhost:8080/homepage.html
 ```
