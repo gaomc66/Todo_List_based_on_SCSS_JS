@@ -21,12 +21,15 @@ xhr.onload = (evt) => {
 
 xhr.send();
 
+let todoItemsMap = {};
+
 /**
  * init add new to-do item and hide it
  */
 let init = function (){
     document.getElementById("add-new").style.display = "none";
     document.getElementById("add-btn").onclick=addNewTodoItem;
+
 }
 
 /**
@@ -35,15 +38,65 @@ let init = function (){
  */
 let storeTodoItems = function (evt) {
     // make sure just store one time
-    if(Object.keys(localStorage).length < 1){
-        let todoItems = JSON.parse(evt.target.responseText);
-
-        console.log(todoItems);
-        todoItems.forEach(theTodoItem => {
-            window.localStorage.setItem(theTodoItem.title, JSON.stringify(theTodoItem));
-        });
+    console.log("First: " + window.localStorage.getItem("firstTimeUserMark"));
+    if(window.localStorage.getItem("firstTimeUserMark") !== "marked"){
+        console.log("first marked!");
+        setTodoItemsToMap(evt);
+        setMapToLocalStorage();
+        window.localStorage.setItem("firstTimeUserMark", "marked");
     }
 }
+
+/**
+ * set new todo items to the todoItemsMap
+ * @param {*} evt 
+ */
+let setTodoItemsToMap = function (evt) {
+    let todoItemsList = JSON.parse(evt.target.responseText);
+    todoItemsList.forEach(todoItem => {
+        todoItemsMap[todoItem.title] = todoItem;
+    });
+}
+
+/**
+ * get todo item object
+ * @param {*} title 
+ */
+let getTodoItemByTitle = function (title) {
+    return getTodoItemsFrLocalStorage()[title];
+}
+
+/**
+ * set updated map to local storage
+ */
+let setMapToLocalStorage = function () {
+    localStorage.setItem("todoItemsMap", JSON.stringify(todoItemsMap));
+    console.log(JSON.stringify(todoItemsMap));
+    console.log(JSON.parse(localStorage.getItem("todoItemsMap")));
+}
+
+/**
+ * get todo items list fr map in localstorage
+ */
+let getTodoItemsFrLocalStorage = function () {
+    console.log(todoItemsMap);
+    todoItemsMap = JSON.parse(window.localStorage.getItem("todoItemsMap"));
+    console.log(todoItemsMap);
+    
+    return todoItemsMap;
+}
+
+
+/**
+ * delete todo item fr map and update map in local storage
+ * @param title of the todo item
+ */
+let deleteTodoItem = function (title) {
+    delete todoItemsMap[title];
+    console.log(todoItemsMap);
+    setMapToLocalStorage();
+}
+
 
 /**
  * display to-do items to to-do list and complete list
@@ -51,19 +104,24 @@ let storeTodoItems = function (evt) {
 let initTodoItems = function(){
     let todoItemHolder = document.getElementById('todo-list');
     let completeItemHolder = document.getElementById('complete-list');
+    console.log("initTodoItems");
 
-    let todoItems = [],
-        keys = Object.keys(localStorage),
-        i = keys.length;
+    console.log(todoItemsMap);
 
-        console.log("keys: " + keys);
+    getTodoItemsFrLocalStorage();
 
-    while( i-- ){
-        let todoItem = getTodoItemByTitle(keys[i]);
-        todoItems.push(todoItem);
-    }
+    console.log(todoItemsMap);
 
-    todoItems.forEach(theTodoItem => {
+    let keys = Object.keys(todoItemsMap);
+    console.log("keys: " + keys);
+
+    // while( i-- ){
+        
+    //     let todoItem = getTodoItemByTitle(keys[i]);
+    //     todoItems.push(todoItem);
+    // }
+    keys.forEach(key => {
+        let theTodoItem = todoItemsMap[key];
         console.log(theTodoItem);
         if(theTodoItem.status){
             appendTodoItem(theTodoItem,completeItemHolder);
@@ -71,7 +129,8 @@ let initTodoItems = function(){
             appendTodoItem(theTodoItem,todoItemHolder);
         }
         console.log("stored into local storage");
-    });
+    })
+    
 }
 
 /**
@@ -137,7 +196,8 @@ let bandEventInTodoList = function (theTodoItemElement) {
     console.log(viewBtn);
 
     deleteBtn.addEventListener("click", () => {
-        window.localStorage.removeItem(title);
+        // window.localStorage.removeItem(title);
+        deleteTodoItem(title);
         location.reload();
     });
 
@@ -151,7 +211,10 @@ let bandEventInTodoList = function (theTodoItemElement) {
             theTodoItem.status = true;
         }
         console.log(theTodoItem);
-        window.localStorage.setItem(title, JSON.stringify(theTodoItem));
+        // window.localStorage.setItem(title, JSON.stringify(theTodoItem));
+        todoItemsMap[theTodoItem.title] = theTodoItem;
+        console.log(todoItemsMap);
+        setMapToLocalStorage();
 
         location.reload();
     });
@@ -177,13 +240,7 @@ let bandEventInTodoList = function (theTodoItemElement) {
     });
 }
 
-/**
- * get todo item object
- * @param {*} title 
- */
-let getTodoItemByTitle = function (title) {
-    return JSON.parse(window.localStorage.getItem(title));
-}
+
 
 /**
  * generate new todo item object and added to local storage, and call appendTodoItem function
@@ -203,7 +260,10 @@ let addNewTodoItem = function () {
 
     console.log("Add new todo item to local storage.");
 
-    window.localStorage.setItem(todoItem.title,  JSON.stringify(todoItem));
+    // window.localStorage.setItem(todoItem.title,  JSON.stringify(todoItem));
+
+    todoItemsMap[todoItem.title] = todoItem;
+    setMapToLocalStorage();
 
     console.log("append new todo item to todo list");
 
