@@ -7,16 +7,20 @@ xhr.open('GET',url);
 
 xhr.onload = (evt) => {
     if(evt.target.status === 200){
-        // init basic divs
-        init();
         // store data fr JSON file to local storage initially 
         storeTodoItems(evt);    
-        // init todo items to todo-list and completed-list    
-        initTodoItems();
-        // bind all btn Events
-        bandAllEvent();
     }
     console.log(evt.status);
+}
+
+window.onload = function () {
+
+    // init basic divs
+    init();
+    // init todo items to todo-list and completed-list    
+    initTodoItems();
+    // bind all btn Events
+    bandAllEvent();  
 }
 
 xhr.send();
@@ -248,6 +252,13 @@ let bandEventInTodoList = function (theTodoItemElement) {
 let addNewTodoItem = function () {
     console.log("addNewTodoItem");
 
+    if(document.getElementById("title-input").value == "" 
+    || document.getElementById("description-input").value == ""
+    || document.getElementById("date-input").value == ""
+    || document.getElementById("time-input").value == "") {
+        return;
+    }
+
     let todoItem = {
         "title" : document.getElementById("title-input").value,
         "description" : document.getElementById("description-input").value,
@@ -423,6 +434,8 @@ let createDetailView = function (todoItem) {
     table.appendChild(dateTr);
     table.appendChild(timeTr);
     table.appendChild(statusTr);
+
+    
 
     
     detailViewDiv.appendChild(table);
